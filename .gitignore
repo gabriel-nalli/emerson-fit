@@ -1,0 +1,11 @@
+node_modules
+dist
+.DS_Store
+.vercel
+
+# artefatos locais de build/edição de imagem
+_brief-imagens/hero-bg/cutout
+_brief-imagens/mockup/mockup.png
+_brief-imagens/mockup/mockup-2x.png
+_brief-imagens/mockup/mockup-render.html
+_brief-imagens/verificacao/chrome-profile/

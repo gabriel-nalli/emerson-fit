@@ -1,0 +1,75 @@
+{
+  "checks": [
+    {
+      "device": "desktop",
+      "section": "topo",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 827.09375,
+      "background": "url(\"http://localhost:5175/wp-content/uploads/2024/11/ng-car12ol1.webp\")",
+      "viewport": 1440,
+      "pageWidth": 1440
+    },
+    {
+      "device": "desktop",
+      "section": "sobre",
+      "x": 0,
+      "y": 4376.609375,
+      "width": 1440,
+      "height": 992,
+      "background": "url(\"http://localhost:5175/wp-content/uploads/2024/11/bg-biocarol13.jpg\")",
+      "viewport": 1440,
+      "pageWidth": 1440
+    },
+    {
+      "device": "mobile",
+      "section": "topo",
+      "x": 0,
+      "y": 0,
+      "width": 430,
+      "height": 831.5625,
+      "background": "url(\"http://localhost:5175/wp-content/uploads/2024/11/ng-carol1-mi12ble.webp\")",
+      "viewport": 430,
+      "pageWidth": 430
+    },
+    {
+      "device": "mobile",
+      "section": "sobre",
+      "x": 0,
+      "y": 6924.734375,
+      "width": 430,
+      "height": 1069.875,
+      "background": "url(\"http://localhost:5175/wp-content/uploads/2024/11/bg-biocarol-mobile-1-1.webp\")",
+      "viewport": 430,
+      "pageWidth": 430
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/ng-car12ol1.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/bg-biocarol13.jpg",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/ng-carol1-mi12ble.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/bg-biocarol-mobile-1-1.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/ng-carol1-mi12ble.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:5175/wp-content/uploads/2024/11/bg-biocarol-mobile-1-1.webp",
+      "status": 200
+    }
+  ],
+  "errors": []
+}
