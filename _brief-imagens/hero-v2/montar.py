@@ -6,9 +6,19 @@ exec(open(B+'integrar.py').read().split('# desktop: recorte original')[0])     #
 cut=Image.open(V+'recorte-gabriel.png').convert('RGBA'); cut=cut.crop(cut.getbbox())   # recorte feito pelo Gabriel
 # camisa branca: segura as altas-luzes antes da integracao
 rgb=np.asarray(cut.convert('RGB'),np.float32); al=cut.getchannel('A')
-rgb=np.where(rgb>160,160+(rgb-160)*0.5,rgb)*0.93          # camisa branca sem estourar
-cinza=rgb.mean(-1,keepdims=True); rgb=cinza+(rgb-cinza)*0.86     # menos saturacao, casa com o fundo cinza
-rgb=rgb*np.array([0.985,0.995,1.02],np.float32)                   # leve puxada fria
+# tom local: segura o branco sem achatar as dobras (base suavizada comprimida, detalhe preservado e realcado)
+lum=rgb.mean(-1)
+base=np.asarray(Image.fromarray(np.clip(lum,0,255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(18)),np.float32)
+detalhe=lum-base
+base_c=np.where(base>205,205+(base-205)*0.68,base)*0.985          # branco maximo ~239, sem virar cinza
+novo=np.clip(base_c+detalhe*1.35,0,255)
+rgb=rgb*(novo/np.maximum(lum,1))[...,None]
+# nitidez leve na luminancia (so realca, nao inventa)
+l2=rgb.mean(-1); blur=np.asarray(Image.fromarray(np.clip(l2,0,255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.1)),np.float32)
+d=l2-blur; d=np.where(np.abs(d)>1.5,d,0)*0.6
+rgb=rgb+np.clip(d,-12,12)[...,None]
+cinza=rgb.mean(-1,keepdims=True); rgb=cinza+(rgb-cinza)*0.86     # tira o bege sem mexer na textura
+rgb=rgb*np.array([0.99,0.997,1.012],np.float32)                   # puxada fria bem leve
 cut=Image.fromarray(np.clip(rgb,0,255).astype(np.uint8)).convert('RGBA'); cut.putalpha(al)
 def integrar2(im, fade_px, bg=(15,15,17)):
     """integracao sem halo: borda suave, light-wrap leve, sombreamento lateral, grao e sombra difusa"""
@@ -22,9 +32,10 @@ def integrar2(im, fade_px, bg=(15,15,17)):
     rgb=rgb*(1-0.42*e1)+BGc*0.42*e1                     # a borda recebe a cor do ambiente
     rgb=rgb*(1-0.14*e2)                                   # afunda de leve, sem contorno preto
     ys,xs=np.nonzero(af>0.5); x0,x1=xs.min(),xs.max()
-    grad=0.84+0.16*np.clip((np.arange(W)-x0)/max(1,x1-x0),0,1)   # luz vem da direita, esquerda mais escura
+    grad=0.91+0.09*np.clip((np.arange(W)-x0)/max(1,x1-x0),0,1)   # luz vem da direita, esquerda mais escura
     rgb=rgb*grad[None,:,None]
-    rgb=rgb+np.random.default_rng(7).normal(0,2.6,rgb.shape).astype(np.float32)   # grao unifica com o fundo
+    gr=np.random.default_rng(7).normal(0,2.0,rgb.shape).astype(np.float32)
+    rgb=rgb+gr*(1-np.clip(rgb.mean(-1,keepdims=True)/255,0,1))*1.3   # grao so nas areas medias/escuras
     yy=np.arange(H)[:,None]; af=af*np.clip((H-1-yy)/fade_px,0,1)**1.2
     sujeito=Image.fromarray(np.clip(rgb,0,255).astype(np.uint8)).convert('RGBA')
     sujeito.putalpha(Image.fromarray((af*255).astype(np.uint8)))
